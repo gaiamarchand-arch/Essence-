@@ -1,0 +1,68 @@
+openapi: 3.1.0
+info:
+  title: Essence du Silence API
+  version: 1.0.0
+  description: >
+    API pour interagir avec le jeu narratif "L'Essence du Silence".
+servers:
+  - url: https://<TON-PROJET>.vercel.app
+    description: Remplace par l’URL Vercel une fois déployée.
+paths:
+  /api/start:
+    post:
+      operationId: startSession
+      summary: Démarre une nouvelle session.
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                player_name:
+                  type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [session_id, message, phase, time]
+                properties:
+                  session_id: { type: string, description: UUID v4 }
+                  message: { type: string }
+                  phase: { type: string, enum: [prologue, enquête, climax, épilogue] }
+                  time: { type: string, description: Horodatage ISO 8601 }
+  /api/turn:
+    post:
+      operationId: processTurn
+      summary: Traite l'entrée du joueur.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [session_id, input]
+              properties:
+                session_id: { type: string }
+                input: { type: string }
+                temperature:
+                  type: number
+                  minimum: 0
+                  maximum: 1
+                  default: 0.3
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [reply, phase, time, summary]
+                properties:
+                  reply: { type: string }
+                  phase: { type: string, enum: [prologue, enquête, climax, épilogue] }
+                  time: { type: string }
+                  summary: { type: string }

@@ -1,0 +1,53 @@
+openapi: 3.1.0
+info:
+  title: Essence du Silence API
+  version: 1.0.0
+  description: >
+    API pour interagir avec le jeu narratif "L'Essence du Silence", un thriller interactif en huis clos rural.
+
+servers:
+  - url: https://your-game-server.com
+    description: Serveur principal du jeu hébergeant les routes /start et /turn.
+
+paths:
+  /start:
+    post:
+      operationId: startSession
+      summary: Démarre une nouvelle session de jeu.
+      description: >
+        Initialise l'état du jeu et retourne l'ID de session unique ainsi que la première instruction pour le joueur.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties: {}
+      responses:
+        '200':
+          description: Session démarrée avec succès.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  session_id:
+                    type: string
+                    description: Identifiant unique de la session de jeu.
+                  message:
+                    type: string
+                    description: Message d'accueil demandant les noms.
+
+  /turn:
+    post:
+      operationId: processTurn
+      summary: Traite l'entrée du joueur, fait progresser le temps et l'état du jeu.
+      description: >
+        Reçoit l'ID de session et l'entrée utilisateur, met à jour le temps et la phase, et retourne la réponse narrative ainsi que l'état mis à jour.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
